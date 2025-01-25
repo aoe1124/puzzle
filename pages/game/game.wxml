@@ -1,0 +1,85 @@
+<!--pages/game/game.wxml-->
+<view class="game-container">
+  <!-- 顶部工具栏 -->
+  <view class="toolbar">
+    <view class="toolbar-left">
+      <view class="back-btn" bindtap="navigateBack">
+        <text class="iconfont icon-back"></text>
+      </view>
+      <view class="difficulty">{{grid}}x{{grid}}</view>
+    </view>
+    <view class="toolbar-right">
+      <view class="preview-btn" bindtap="togglePreview">
+        <text class="iconfont icon-preview"></text>
+      </view>
+      <view class="pause-btn" bindtap="togglePause">
+        <text class="iconfont icon-{{isPaused ? 'play' : 'pause'}}"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏信息 -->
+  <view class="game-info">
+    <view class="info-item">
+      <text class="label">步数</text>
+      <text class="value">{{steps}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">用时</text>
+      <text class="value">{{time}}s</text>
+    </view>
+  </view>
+
+  <!-- 预览图 -->
+  <view class="preview {{showPreview ? 'show' : ''}}" bindtap="togglePreview">
+    <image class="preview-image" src="{{imageUrl}}" mode="aspectFit"></image>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="puzzle-container" style="--grid: {{grid}}">
+    <block wx:for="{{blocks}}" wx:key="index">
+      <view 
+        class="puzzle-block {{index === emptyPos ? 'empty' : ''}} {{isComplete ? 'complete' : ''}}"
+        data-position="{{index}}"
+        bindtap="onBlockTap"
+      >
+        <image 
+          wx:if="{{index !== emptyPos}}"
+          class="block-image"
+          src="{{blockImages[blocks[index]]}}"
+          mode="aspectFill"
+        ></image>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-btns">
+    <button class="reset-btn" bindtap="resetGame" hover-class="btn-hover">
+      重新开始
+    </button>
+  </view>
+
+  <!-- 暂停遮罩 -->
+  <view class="pause-mask" wx:if="{{isPaused}}" bindtap="togglePause">
+    <view class="pause-content">
+      <text class="iconfont icon-play"></text>
+      <text class="pause-text">点击继续</text>
+    </view>
+  </view>
+
+  <!-- 完成遮罩 -->
+  <view class="complete-mask" wx:if="{{isComplete}}">
+    <view class="complete-content">
+      <view class="complete-title">恭喜完成！</view>
+      <view class="complete-info">
+        <text>用时：{{time}}秒</text>
+        <text>步数：{{steps}}步</text>
+      </view>
+      <view class="complete-btns">
+        <button class="again-btn" bindtap="resetGame">再来一局</button>
+        <button class="back-btn" bindtap="navigateBack">返回</button>
+      </view>
+    </view>
+  </view>
+</view> 

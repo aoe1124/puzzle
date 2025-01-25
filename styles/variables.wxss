@@ -1,0 +1,57 @@
+/* 全局样式变量 */
+page {
+  /* 主色调 */
+  --primary: #2C3E50;
+  --primary-light: rgba(44, 62, 80, 0.05);
+  
+  /* 中性色 */
+  --white: #FFFFFF;
+  --gray-50: #F8F9FA;
+  --gray-100: #F1F3F5;
+  --gray-200: #E9ECEF;
+  --gray-300: #DEE2E6;
+  
+  /* 文字颜色 */
+  --text-primary: #2C3E50;
+  --text-secondary: #6C7A89;
+  --text-hint: #95A5A6;
+  
+  /* 阴影 */
+  --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+  
+  /* 圆角 */
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-full: 999rpx;
+  
+  /* 间距 */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+  
+  /* 字体大小 */
+  --font-xs: 24rpx;
+  --font-sm: 28rpx;
+  --font-md: 32rpx;
+  --font-lg: 36rpx;
+  --font-xl: 40rpx;
+  
+  /* 动画 */
+  --transition-fast: 200ms;
+  --transition-normal: 300ms;
+  --transition-slow: 400ms;
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 背景 */
+  --bg-gradient: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+  --modal-overlay: rgba(0, 0, 0, 0.2);
+  
+  /* 其他 */
+  --header-height: 88rpx;
+  --safe-area-bottom: env(safe-area-inset-bottom);
+} 

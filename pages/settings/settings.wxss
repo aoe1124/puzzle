@@ -1,0 +1,89 @@
+/* pages/settings/settings.wxss */
+@import '/styles/variables.wxss';
+
+.container {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  padding-bottom: var(--safe-area-bottom);
+}
+
+.settings-list {
+  padding: var(--space-md);
+}
+
+.settings-group {
+  margin-bottom: var(--space-lg);
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  position: relative;
+}
+
+.settings-item::after {
+  content: '';
+  position: absolute;
+  left: var(--space-lg);
+  right: var(--space-lg);
+  bottom: 0;
+  height: 1px;
+  background: var(--gray-100);
+}
+
+.settings-item:last-child::after {
+  display: none;
+}
+
+.settings-item:active {
+  background: var(--gray-50);
+}
+
+.settings-label {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.settings-value {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+}
+
+/* 开关样式 */
+switch {
+  transform: scale(0.9);
+  margin: -6rpx;
+}
+
+/* 修改开关的默认颜色 */
+switch::before {
+  background: var(--gray-200) !important;
+}
+
+switch::after {
+  background: var(--white) !important;
+}
+
+/* 选中状态的颜色 */
+.wx-switch-input-checked {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* 版本信息 */
+.version-info {
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.version-text {
+  font-size: var(--font-xs);
+  color: var(--text-hint);
+} 

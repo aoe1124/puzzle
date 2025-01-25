@@ -1,0 +1,284 @@
+/* pages/game/game.wxss */
+.game-header {
+  padding: 20rpx;
+  background: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.difficulty-info {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+.game-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  padding: env(safe-area-inset-top) var(--spacing-md) env(safe-area-inset-bottom);
+  box-sizing: border-box;
+}
+
+/* 顶部工具栏 */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.back-btn,
+.preview-btn,
+.pause-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border-radius: var(--radius-circle);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.back-btn:active,
+.preview-btn:active,
+.pause-btn:active {
+  transform: scale(0.95);
+}
+
+.difficulty {
+  font-size: var(--font-lg);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+/* 游戏信息 */
+.game-info {
+  display: flex;
+  justify-content: space-around;
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-size: var(--font-sm);
+  color: var(--color-text-light);
+}
+
+.value {
+  font-size: var(--font-xl);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* 预览图 */
+.preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+}
+
+.preview.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.preview-image {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: var(--radius-md);
+}
+
+/* 游戏区域 */
+.puzzle-container {
+  --block-gap: 4rpx;
+  --block-size: calc((100vw - var(--spacing-md) * 2 - var(--block-gap) * (var(--grid) - 1)) / var(--grid));
+  
+  display: grid;
+  grid-template-columns: repeat(var(--grid), 1fr);
+  gap: var(--block-gap);
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.puzzle-block {
+  position: relative;
+  width: var(--block-size);
+  height: var(--block-size);
+  background: var(--color-bg-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.puzzle-block:not(.empty):active {
+  transform: scale(0.95);
+}
+
+.block-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empty {
+  background: var(--color-bg-dark);
+}
+
+/* 底部按钮 */
+.bottom-btns {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+}
+
+.reset-btn {
+  width: 60%;
+  height: 88rpx;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: var(--font-md);
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.btn-hover {
+  transform: scale(0.95);
+}
+
+/* 暂停遮罩 */
+.pause-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.pause-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.pause-text {
+  color: var(--color-white);
+  font-size: var(--font-lg);
+}
+
+/* 完成遮罩 */
+.complete-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.complete-content {
+  width: 80%;
+  padding: var(--spacing-xl);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.complete-title {
+  font-size: var(--font-xl);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.complete-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text);
+  font-size: var(--font-md);
+}
+
+.complete-btns {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.again-btn,
+.back-btn {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-md);
+}
+
+.again-btn {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.back-btn {
+  background: var(--color-bg-light);
+  color: var(--color-text);
+}
+
+/* 动画效果 */
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.complete-content {
+  animation: slideIn 0.3s ease-out;
+} 

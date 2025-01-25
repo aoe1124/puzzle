@@ -1,0 +1,19 @@
+<!--pages/rank/rank.wxml-->
+<view class="container">
+  <view class="loading" wx:if="{{isLoading}}">
+    <view class="loading-spinner"></view>
+  </view>
+  
+  <block wx:else>
+    <view class="rank-list">
+      <view class="rank-item" wx:for="{{rankList}}" wx:key="rank">
+        <view class="rank-number {{item.rank <= 3 ? 'top-' + item.rank : ''}}">{{item.rank}}</view>
+        <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view class="player-info">
+          <text class="nickname">{{item.nickname}}</text>
+          <text class="score">{{item.score}}分</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view> 

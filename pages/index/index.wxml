@@ -1,0 +1,88 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 顶部欢迎语 -->
+  <view class="welcome fade-in">
+    <text class="title">欢迎来到治愈系拼图</text>
+    <text class="subtitle">选择一张喜欢的图片开始游戏吧</text>
+  </view>
+
+  <!-- 图片瀑布流 -->
+  <view class="waterfall">
+    <!-- 左列 -->
+    <view class="waterfall-column">
+      <view class="image-card fade-in" 
+            wx:for="{{leftImages}}" 
+            wx:key="id" 
+            bindtap="previewImage" 
+            data-image="{{item}}">
+        <image src="{{item.url}}" 
+               mode="widthFix" 
+               lazy-load
+               style="height: {{item.height}}px"
+               binderror="handleImageError"
+               data-column="left"
+               data-index="{{index}}">
+        </image>
+        <view class="image-error" wx:if="{{item.loadError}}">
+          <icon type="warn" size="40"></icon>
+          <text>图片加载失败</text>
+        </view>
+        <view class="image-title">{{item.title}}</view>
+      </view>
+    </view>
+
+    <!-- 右列 -->
+    <view class="waterfall-column">
+      <view class="image-card fade-in" 
+            wx:for="{{rightImages}}" 
+            wx:key="id" 
+            bindtap="previewImage" 
+            data-image="{{item}}">
+        <image src="{{item.url}}" 
+               mode="widthFix" 
+               lazy-load
+               style="height: {{item.height}}px"
+               binderror="handleImageError"
+               data-column="right"
+               data-index="{{index}}">
+        </image>
+        <view class="image-error" wx:if="{{item.loadError}}">
+          <icon type="warn" size="40"></icon>
+          <text>图片加载失败</text>
+        </view>
+        <view class="image-title">{{item.title}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 难度选择弹窗 -->
+  <view class="difficulty-modal {{showDifficulty ? 'show' : ''}}" bindtap="closeDifficulty">
+    <view class="modal-content" catchtap="preventBubble">
+      <view class="modal-title">选择难度</view>
+      <view class="difficulty-options">
+        <view class="difficulty-item {{selectedDifficulty === 'easy' ? 'selected' : ''}}" 
+              bindtap="selectDifficulty" data-difficulty="easy">
+          <text>轻松休闲</text>
+          <text class="hint-text">3 x 3</text>
+        </view>
+        <view class="difficulty-item {{selectedDifficulty === 'medium' ? 'selected' : ''}}"
+              bindtap="selectDifficulty" data-difficulty="medium">
+          <text>优雅进阶</text>
+          <text class="hint-text">4 x 4</text>
+        </view>
+        <view class="difficulty-item {{selectedDifficulty === 'hard' ? 'selected' : ''}}"
+              bindtap="selectDifficulty" data-difficulty="hard">
+          <text>浪漫挑战</text>
+          <text class="hint-text">5 x 5</text>
+        </view>
+      </view>
+      <button class="btn btn-primary" bindtap="startGame">开始游戏</button>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading" wx:if="{{isLoading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+</view> 

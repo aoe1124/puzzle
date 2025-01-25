@@ -1,0 +1,103 @@
+/* pages/rank/rank.wxss */
+@import '/styles/variables.wxss';
+
+.container {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  padding-bottom: var(--safe-area-bottom);
+}
+
+.rank-list {
+  padding: var(--space-md);
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.rank-item:active {
+  transform: translateY(2rpx);
+  box-shadow: var(--shadow-sm);
+}
+
+.rank-number {
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-size: var(--font-md);
+  color: var(--text-secondary);
+  margin-right: var(--space-md);
+  font-weight: 500;
+}
+
+.rank-number.top-1 {
+  color: #FFB800;
+  font-weight: 600;
+}
+
+.rank-number.top-2 {
+  color: #A3A8B8;
+  font-weight: 600;
+}
+
+.rank-number.top-3 {
+  color: #B87A3B;
+  font-weight: 600;
+}
+
+.avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: var(--radius-full);
+  margin-right: var(--space-md);
+  background: var(--gray-50);
+}
+
+.player-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.nickname {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.score {
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+}
+
+/* 加载状态 */
+.loading {
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.loading-spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid var(--gray-100);
+  border-top: 4rpx solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

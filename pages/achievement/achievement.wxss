@@ -1,0 +1,114 @@
+/* pages/achievement/achievement.wxss */
+@import '/styles/variables.wxss';
+
+.container {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  padding-bottom: var(--safe-area-bottom);
+}
+
+.achievement-list {
+  padding: var(--space-md);
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--ease-out);
+  opacity: 0.7;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gray-50);
+  pointer-events: none;
+  transition: opacity var(--transition-normal) var(--ease-out);
+}
+
+.achievement-item.unlocked {
+  opacity: 1;
+}
+
+.achievement-item.unlocked::after {
+  opacity: 0;
+}
+
+.achievement-icon {
+  width: 88rpx;
+  height: 88rpx;
+  margin-right: var(--space-md);
+  border-radius: var(--radius-sm);
+  background: var(--gray-50);
+  z-index: 1;
+}
+
+.achievement-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  z-index: 1;
+}
+
+.achievement-title {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.achievement-description {
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.achievement-status {
+  padding: 0 var(--space-md);
+  z-index: 1;
+}
+
+.status-text {
+  font-size: var(--font-xs);
+  color: var(--text-hint);
+  transition: color var(--transition-normal) var(--ease-out);
+}
+
+.achievement-item.unlocked .status-text {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* 加载状态 */
+.loading {
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.loading-spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid var(--gray-100);
+  border-top: 4rpx solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

@@ -1,0 +1,39 @@
+<!--pages/settings/settings.wxml-->
+<view class="container">
+  <view class="settings-list">
+    <view class="settings-group">
+      <view class="settings-item" bindtap="toggleSetting" data-key="sound">
+        <text class="settings-label">音效</text>
+        <switch checked="{{settings.sound}}" color="#2C3E50"></switch>
+      </view>
+      
+      <view class="settings-item" bindtap="toggleSetting" data-key="vibration">
+        <text class="settings-label">震动</text>
+        <switch checked="{{settings.vibration}}" color="#2C3E50"></switch>
+      </view>
+      
+      <view class="settings-item" bindtap="toggleSetting" data-key="showPreview">
+        <text class="settings-label">显示原图参考</text>
+        <switch checked="{{settings.showPreview}}" color="#2C3E50"></switch>
+      </view>
+    </view>
+    
+    <view class="settings-group">
+      <view class="settings-item" bindtap="switchTheme">
+        <text class="settings-label">深色模式</text>
+        <switch checked="{{settings.theme === 'dark'}}" color="#2C3E50"></switch>
+      </view>
+    </view>
+    
+    <view class="settings-group">
+      <view class="settings-item">
+        <text class="settings-label">当前版本</text>
+        <text class="settings-value">1.0.0</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="version-info">
+    <text class="version-text">治愈系拼图 v1.0.0</text>
+  </view>
+</view> 

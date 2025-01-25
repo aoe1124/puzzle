@@ -1,0 +1,23 @@
+<!--pages/achievement/achievement.wxml-->
+<view class="container">
+  <view class="loading" wx:if="{{isLoading}}">
+    <view class="loading-spinner"></view>
+  </view>
+  
+  <block wx:else>
+    <view class="achievement-list">
+      <view class="achievement-item {{item.isUnlocked ? 'unlocked' : ''}}" 
+            wx:for="{{achievements}}" 
+            wx:key="id">
+        <image class="achievement-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        <view class="achievement-info">
+          <text class="achievement-title">{{item.title}}</text>
+          <text class="achievement-description">{{item.description}}</text>
+        </view>
+        <view class="achievement-status">
+          <text class="status-text">{{item.isUnlocked ? '已解锁' : '未解锁'}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view> 
