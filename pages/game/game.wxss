@@ -17,10 +17,14 @@
   background: var(--bg-gradient);
   padding: env(safe-area-inset-top) var(--spacing-md) env(safe-area-inset-bottom);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* 顶部工具栏 */
 .toolbar {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,6 +66,7 @@
 
 /* 游戏信息 */
 .game-info {
+  width: 100%;
   display: flex;
   justify-content: space-around;
   margin: var(--spacing-md) 0;
@@ -120,36 +125,68 @@
 /* 游戏区域 */
 .puzzle-container {
   --block-gap: 4rpx;
-  --block-size: calc((100vw - var(--spacing-md) * 2 - var(--block-gap) * (var(--grid) - 1)) / var(--grid));
-  
   display: grid;
-  grid-template-columns: repeat(var(--grid), 1fr);
   gap: var(--block-gap);
-  margin: var(--spacing-lg) 0;
+  margin: var(--spacing-lg) auto;
   padding: var(--spacing-md);
   background: var(--color-white);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  box-sizing: border-box;
 }
 
 .puzzle-block {
   position: relative;
-  width: var(--block-size);
-  height: var(--block-size);
   background: var(--color-bg-light);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  touch-action: none;
 }
 
-.puzzle-block:not(.empty):active {
+.puzzle-block.dragging {
+  opacity: 0.9;
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+  border: 2rpx solid var(--color-primary);
+}
+
+.puzzle-block.drag-target {
+  opacity: 0.7;
   transform: scale(0.95);
+  border: 2rpx dashed var(--color-primary);
+}
+
+.puzzle-block.correct {
+  border: 2rpx solid var(--color-success);
 }
 
 .block-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+}
+
+.correct-mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(var(--color-success-rgb), 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.correct-mark .icon-check {
+  color: var(--color-white);
+  font-size: 36rpx;
 }
 
 .empty {
@@ -158,6 +195,7 @@
 
 /* 底部按钮 */
 .bottom-btns {
+  width: 100%;
   display: flex;
   justify-content: center;
   margin-top: var(--spacing-xl);
@@ -249,14 +287,17 @@
 .complete-btns {
   display: flex;
   gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
 }
 
 .again-btn,
 .back-btn {
-  padding: var(--spacing-sm) var(--spacing-xl);
-  border-radius: var(--radius-pill);
+  min-width: 200rpx;
+  height: 80rpx;
   font-size: var(--font-md);
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .again-btn {

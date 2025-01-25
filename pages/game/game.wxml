@@ -36,19 +36,25 @@
   </view>
 
   <!-- 游戏区域 -->
-  <view class="puzzle-container" style="--grid: {{grid}}">
+  <view class="puzzle-container" style="{{containerStyle}}">
     <block wx:for="{{blocks}}" wx:key="index">
       <view 
-        class="puzzle-block {{index === emptyPos ? 'empty' : ''}} {{isComplete ? 'complete' : ''}}"
+        class="puzzle-block {{correctPositions.includes(index) ? 'correct' : ''}} {{dragBlock === index ? 'dragging' : ''}} {{dragPosition === index ? 'drag-target' : ''}}"
+        style="{{blockStyle}}"
         data-position="{{index}}"
-        bindtap="onBlockTap"
+        bind:touchstart="onBlockTouchStart"
+        bind:touchmove="onBlockTouchMove"
+        bind:touchend="onBlockTouchEnd"
+        bind:touchcancel="onBlockTouchCancel"
       >
         <image 
-          wx:if="{{index !== emptyPos}}"
           class="block-image"
           src="{{blockImages[blocks[index]]}}"
           mode="aspectFill"
         ></image>
+        <view class="correct-mark" wx:if="{{correctPositions.includes(index)}}">
+          <text class="iconfont icon-check"></text>
+        </view>
       </view>
     </block>
   </view>

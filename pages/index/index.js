@@ -268,12 +268,19 @@ Page({
   startGame() {
     if (!this.data.selectedImage || !this.data.selectedDifficulty) return
     
-    // 跳转到游戏页面，传递选中的图片和难度
-    wx.navigateTo({
-      url: `/pages/game/game?image=${JSON.stringify(this.data.selectedImage)}&difficulty=${this.data.selectedDifficulty}`
-    })
+    // 根据难度设置网格大小
+    const gridMap = {
+      'easy': 3,
+      'medium': 4,
+      'hard': 5
+    };
     
-    this.closeDifficulty()
+    // 跳转到游戏页面，传递图片URL和网格大小
+    wx.navigateTo({
+      url: `/pages/game/game?imageUrl=${this.data.selectedImage.url}&grid=${gridMap[this.data.selectedDifficulty]}`
+    });
+    
+    this.closeDifficulty();
   },
 
   // 关闭难度选择弹窗
