@@ -18,6 +18,8 @@ Page({
     blockStyle: '', // 拼图块样式
     dragBlock: null, // 当前拖动的块
     dragPosition: null, // 当前拖动的位置
+    dragStyle: '', // 新增：拖动时的位置样式
+    startPos: null, // 新增：开始拖动时的触摸位置
   },
 
   game: null, // 游戏实例
@@ -225,25 +227,45 @@ Page({
     if (this.data.isComplete || this.data.isPaused) return;
     
     const position = e.currentTarget.dataset.position;
-    // 如果拼图块已经在正确位置，不允许拖动
     if (this.data.correctPositions.includes(position)) return;
     
-    this.setData({
-      dragBlock: position
-    });
+    // 获取触摸点位置
+    const touch = e.touches[0];
+    
+    // 获取被拖动块的位置和大小信息
+    const query = wx.createSelectorQuery();
+    query.select(`#block-${position}`).boundingClientRect(rect => {
+      if (!rect) return;
+      
+      // 计算手指在块内的相对位置
+      const offsetX = touch.clientX - rect.left;
+      const offsetY = touch.clientY - rect.top;
+      
+      this.setData({
+        dragBlock: position,
+        dragStyle: `left: ${touch.clientX - offsetX}px; top: ${touch.clientY - offsetY}px; width: ${rect.width}px; height: ${rect.height}px;`,
+        startPos: { offsetX, offsetY }
+      });
+    }).exec();
   },
 
   // 拖动中
   onBlockTouchMove(e) {
-    if (this.data.dragBlock === null) return;
+    if (this.data.dragBlock === null || !this.data.startPos) return;
     
-    // 获取当前触摸点在页面中的位置
     const touch = e.touches[0];
     
-    // 获取被触摸的拼图块
+    // 使用手指位置减去偏移量，确保拼图块跟随手指移动
+    const left = touch.clientX - this.data.startPos.offsetX;
+    const top = touch.clientY - this.data.startPos.offsetY;
+    
+    this.setData({
+      dragStyle: `left: ${left}px; top: ${top}px; width: ${this.data.dragStyle.match(/width: ([^;]+)/)[1]}; height: ${this.data.dragStyle.match(/height: ([^;]+)/)[1]};`
+    });
+    
+    // 检测目标位置
     this.findBlockByPosition(touch.pageX, touch.pageY).then(targetBlock => {
-      if (targetBlock !== null && targetBlock !== this.data.dragPosition) {
-        // 更新目标位置的视觉效果
+      if (targetBlock !== null && targetBlock !== this.data.dragPosition && targetBlock !== this.data.dragBlock) {
         this.setData({
           dragPosition: targetBlock
         });
@@ -261,7 +283,9 @@ Page({
     // 清除拖动状态
     this.setData({
       dragBlock: null,
-      dragPosition: null
+      dragPosition: null,
+      dragStyle: '',
+      startPos: null
     });
     
     // 如果有有效的目标位置，执行交换
@@ -289,7 +313,9 @@ Page({
     // 清除拖动状态
     this.setData({
       dragBlock: null,
-      dragPosition: null
+      dragPosition: null,
+      dragStyle: '',
+      startPos: null
     });
   },
 

@@ -146,11 +146,18 @@
 }
 
 .puzzle-block.dragging {
-  opacity: 0.9;
-  transform: scale(1.1);
-  z-index: 10;
+  opacity: 0;  /* 原位置的块设为透明 */
+}
+
+.dragging-block {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
   border: 2rpx solid var(--color-primary);
+  background: var(--color-bg-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
 .puzzle-block.drag-target {

@@ -39,6 +39,7 @@
   <view class="puzzle-container" style="{{containerStyle}}">
     <block wx:for="{{blocks}}" wx:key="index">
       <view 
+        id="block-{{index}}"
         class="puzzle-block {{correctPositions.includes(index) ? 'correct' : ''}} {{dragBlock === index ? 'dragging' : ''}} {{dragPosition === index ? 'drag-target' : ''}}"
         style="{{blockStyle}}"
         data-position="{{index}}"
@@ -57,6 +58,19 @@
         </view>
       </view>
     </block>
+  </view>
+
+  <!-- 拖动时的跟随块 -->
+  <view 
+    class="dragging-block" 
+    style="{{dragStyle}}" 
+    wx:if="{{dragBlock !== null}}"
+  >
+    <image 
+      class="block-image"
+      src="{{blockImages[blocks[dragBlock]]}}"
+      mode="aspectFill"
+    ></image>
   </view>
 
   <!-- 底部按钮 -->
