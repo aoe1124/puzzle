@@ -2,19 +2,13 @@
 <view class="game-container">
   <!-- 顶部工具栏 -->
   <view class="toolbar">
-    <view class="toolbar-left">
-      <view class="back-btn" bindtap="navigateBack">
-        <text class="iconfont icon-back"></text>
-      </view>
-      <view class="difficulty">{{grid}}x{{grid}}</view>
+    <view class="preview-btn" bindtap="togglePreview">
+      <text class="iconfont icon-eye"></text>
+      <text>预览</text>
     </view>
-    <view class="toolbar-right">
-      <view class="preview-btn" bindtap="togglePreview">
-        <text class="iconfont icon-preview"></text>
-      </view>
-      <view class="pause-btn" bindtap="togglePause">
-        <text class="iconfont icon-{{isPaused ? 'play' : 'pause'}}"></text>
-      </view>
+    <view class="pause-btn" bindtap="togglePause">
+      <text class="iconfont icon-{{isPaused ? 'play' : 'pause'}}"></text>
+      <text>{{isPaused ? '继续' : '暂停'}}</text>
     </view>
   </view>
 
@@ -27,6 +21,10 @@
     <view class="info-item">
       <text class="label">用时</text>
       <text class="value">{{time}}s</text>
+    </view>
+    <view class="info-item">
+      <text class="label">难度</text>
+      <text class="value">{{grid === 3 ? '休闲' : (grid === 4 ? '进阶' : '挑战')}}</text>
     </view>
   </view>
 

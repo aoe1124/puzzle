@@ -28,34 +28,39 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md) 0;
+  padding: 20rpx 32rpx;
+  box-sizing: border-box;
 }
 
 .toolbar-left,
 .toolbar-right {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
 }
 
-.back-btn,
 .preview-btn,
 .pause-btn {
-  width: 80rpx;
-  height: 80rpx;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: var(--color-white);
-  border-radius: var(--radius-circle);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease;
+  padding: 16rpx 24rpx;
+  background: rgba(44, 62, 80, 0.1);
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  color: #2C3E50;
+  transition: all 0.2s ease;
 }
 
-.back-btn:active,
 .preview-btn:active,
 .pause-btn:active {
   transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.preview-btn .iconfont,
+.pause-btn .iconfont {
+  margin-right: 8rpx;
+  font-size: 32rpx;
 }
 
 .difficulty {
@@ -66,31 +71,32 @@
 
 /* 游戏信息 */
 .game-info {
-  width: 100%;
+  width: calc(100% - 64rpx);
   display: flex;
-  justify-content: space-around;
-  margin: var(--spacing-md) 0;
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  justify-content: space-between;
+  padding: 24rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  margin: 0 32rpx 32rpx;
 }
 
 .info-item {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: 8rpx;
 }
 
 .label {
-  font-size: var(--font-sm);
-  color: var(--color-text-light);
+  font-size: 24rpx;
+  color: #666666;
 }
 
 .value {
-  font-size: var(--font-xl);
-  color: var(--color-primary);
+  font-size: 36rpx;
+  color: #2C3E50;
   font-weight: 600;
 }
 
