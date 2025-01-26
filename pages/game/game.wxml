@@ -2,18 +2,22 @@
 <view class="game-container">
   <!-- 顶部工具栏 -->
   <view class="toolbar">
-    <view class="preview-btn" bindtap="togglePreview">
-      <text class="iconfont icon-eye"></text>
-      <text>预览</text>
+    <view class="mode-btn" bindtap="toggleMode">
+      <text class="iconfont icon-switch"></text>
+      <text>{{grid === 3 ? '休闲模式' : (grid === 4 ? '进阶模式' : '挑战模式')}}</text>
     </view>
-    <view class="pause-btn" bindtap="togglePause">
-      <text class="iconfont icon-{{isPaused ? 'play' : 'pause'}}"></text>
-      <text>{{isPaused ? '继续' : '暂停'}}</text>
+    <view class="preview-btn" bindtap="togglePreview">
+      <text class="iconfont icon-preview"></text>
+      <text>原图预览</text>
     </view>
   </view>
 
   <!-- 游戏信息 -->
   <view class="game-info">
+    <view class="info-item">
+      <text class="label">完成度</text>
+      <text class="value">{{correctPositions.length}}/{{grid * grid}}</text>
+    </view>
     <view class="info-item">
       <text class="label">步数</text>
       <text class="value">{{steps}}</text>
@@ -21,10 +25,6 @@
     <view class="info-item">
       <text class="label">用时</text>
       <text class="value">{{time}}s</text>
-    </view>
-    <view class="info-item">
-      <text class="label">难度</text>
-      <text class="value">{{grid === 3 ? '休闲' : (grid === 4 ? '进阶' : '挑战')}}</text>
     </view>
   </view>
 
@@ -97,6 +97,33 @@
       <view class="complete-btns">
         <button class="again-btn" bindtap="resetGame">再来一局</button>
         <button class="back-btn" bindtap="navigateBack">返回</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 难度选择弹窗 -->
+  <view class="difficulty-modal {{showDifficultyModal ? 'show' : ''}}" bindtap="closeDifficultyModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-title">选择难度</view>
+      <view class="difficulty-options">
+        <view class="difficulty-item {{grid === 3 ? 'selected' : ''}}" 
+              data-grid="3" 
+              bindtap="selectDifficulty">
+          <text>轻松休闲</text>
+          <text class="hint-text">3 x 3</text>
+        </view>
+        <view class="difficulty-item {{grid === 4 ? 'selected' : ''}}" 
+              data-grid="4" 
+              bindtap="selectDifficulty">
+          <text>优雅进阶</text>
+          <text class="hint-text">4 x 4</text>
+        </view>
+        <view class="difficulty-item {{grid === 5 ? 'selected' : ''}}" 
+              data-grid="5" 
+              bindtap="selectDifficulty">
+          <text>浪漫挑战</text>
+          <text class="hint-text">5 x 5</text>
+        </view>
       </view>
     </view>
   </view>

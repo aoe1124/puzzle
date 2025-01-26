@@ -8,18 +8,17 @@ Page({
     imageUrl: '', // 原图URL
     blockImages: [], // 切割后的图片数组
     blocks: [], // 拼图块的位置数组
-    correctPositions: [], // 正确位置的拼图块
     steps: 0, // 移动步数
     time: 0, // 游戏时间（秒）
     isComplete: false, // 是否完成
     showPreview: false, // 是否显示预览图
-    isPaused: false, // 是否暂停
+    showDifficultyModal: false, // 是否显示难度选择弹窗
     containerStyle: '', // 拼图容器样式
     blockStyle: '', // 拼图块样式
     dragBlock: null, // 当前拖动的块
     dragPosition: null, // 当前拖动的位置
-    dragStyle: '', // 新增：拖动时的位置样式
-    startPos: null, // 新增：开始拖动时的触摸位置
+    dragStyle: '', // 拖动时的位置样式
+    startPos: null, // 开始拖动时的触摸位置
   },
 
   game: null, // 游戏实例
@@ -37,7 +36,14 @@ Page({
       return;
     }
 
-    const { grid, imageUrl } = options;
+    const { grid, imageUrl, title } = options;
+    // 设置页面标题
+    if (title) {
+      wx.setNavigationBarTitle({
+        title: title
+      });
+    }
+    
     this.setData({
       grid: parseInt(grid) || 3,
       imageUrl
@@ -120,7 +126,7 @@ Page({
   startTimer() {
     if (this.timer) return;
     this.timer = setInterval(() => {
-      if (!this.data.isPaused && !this.data.isComplete) {
+      if (!this.data.isComplete) {
         this.setData({
           time: this.data.time + 1
         });
@@ -136,7 +142,7 @@ Page({
   },
 
   onBlockTap(e) {
-    if (this.data.isComplete || this.data.isPaused) return;
+    if (this.data.isComplete) return;
 
     const { position } = e.currentTarget.dataset;
     if (!this.game?.canMove(position)) return;
@@ -162,13 +168,6 @@ Page({
     });
   },
 
-  togglePause() {
-    if (this.data.isComplete) return;
-    this.setData({
-      isPaused: !this.data.isPaused
-    });
-  },
-
   resetGame() {
     if (!this.game) return;
     this.game.reset();
@@ -179,7 +178,6 @@ Page({
       steps: gameState.steps,
       time: gameState.time,
       isComplete: gameState.isComplete,
-      isPaused: false,
       showPreview: false
     });
     this.startTimer();
@@ -224,7 +222,7 @@ Page({
 
   // 开始拖动
   onBlockTouchStart(e) {
-    if (this.data.isComplete || this.data.isPaused) return;
+    if (this.data.isComplete) return;
     
     const position = e.currentTarget.dataset.position;
     if (this.data.correctPositions.includes(position)) return;
@@ -335,6 +333,45 @@ Page({
         }
         resolve(null);
       }).exec();
+    });
+  },
+
+  toggleMode() {
+    this.setData({
+      showDifficultyModal: true
+    });
+  },
+
+  closeDifficultyModal() {
+    this.setData({
+      showDifficultyModal: false
+    });
+  },
+
+  stopPropagation() {
+    // 阻止事件冒泡
+  },
+
+  selectDifficulty(e) {
+    const nextGrid = parseInt(e.currentTarget.dataset.grid);
+    if (nextGrid === this.data.grid) {
+      this.closeDifficultyModal();
+      return;
+    }
+
+    wx.showModal({
+      title: '切换难度',
+      content: '切换难度将重新开始游戏，确定要切换吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({ 
+            grid: nextGrid,
+            showDifficultyModal: false
+          }, () => {
+            this.initGame();
+          });
+        }
+      }
     });
   },
 }); 

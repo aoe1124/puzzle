@@ -275,9 +275,9 @@ Page({
       'hard': 5
     };
     
-    // 跳转到游戏页面，传递图片URL和网格大小
+    // 跳转到游戏页面，传递图片URL、网格大小和标题
     wx.navigateTo({
-      url: `/pages/game/game?imageUrl=${this.data.selectedImage.url}&grid=${gridMap[this.data.selectedDifficulty]}`
+      url: `/pages/game/game?imageUrl=${this.data.selectedImage.url}&grid=${gridMap[this.data.selectedDifficulty]}&title=${this.data.selectedImage.title}`
     });
     
     this.closeDifficulty();
