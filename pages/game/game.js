@@ -11,6 +11,7 @@ Page({
     steps: 0, // 移动步数
     time: 0, // 游戏时间（秒）
     isComplete: false, // 是否完成
+    isCompleting: false, // 是否正在播放完成动画
     showPreview: false, // 是否显示预览图
     showDifficultyModal: false, // 是否显示难度选择弹窗
     containerStyle: '', // 拼图容器样式
@@ -177,7 +178,8 @@ Page({
       correctPositions: gameState.correctPositions,
       steps: gameState.steps,
       time: gameState.time,
-      isComplete: gameState.isComplete,
+      isComplete: false,
+      isCompleting: false,
       showPreview: false
     });
     this.startTimer();
@@ -185,31 +187,30 @@ Page({
 
   onGameComplete() {
     this.stopTimer();
-    // 保存游戏记录
-    const record = {
-      grid: this.data.grid,
-      steps: this.data.steps,
-      time: this.data.time,
-      date: new Date().toISOString()
-    };
-    const records = wx.getStorageSync('gameRecords') || [];
-    records.push(record);
-    wx.setStorageSync('gameRecords', records);
-
-    // 显示完成提示
-    wx.showModal({
-      title: '恭喜完成！',
-      content: `用时：${this.data.time}秒\n步数：${this.data.steps}步`,
-      confirmText: '再来一局',
-      cancelText: '返回',
-      success: (res) => {
-        if (res.confirm) {
-          this.resetGame();
-        } else {
-          this.navigateBack();
-        }
-      }
+    
+    // 开始完成动画
+    this.setData({
+      isCompleting: true
     });
+
+    // 等待动画完成后显示面板
+    setTimeout(() => {
+      // 保存游戏记录
+      const record = {
+        grid: this.data.grid,
+        steps: this.data.steps,
+        time: this.data.time,
+        date: new Date().toISOString()
+      };
+      const records = wx.getStorageSync('gameRecords') || [];
+      records.push(record);
+      wx.setStorageSync('gameRecords', records);
+
+      // 显示完成面板
+      this.setData({
+        isComplete: true
+      });
+    }, 2000); // 动画总时长：发光(0.8s) + 合并(0.8s) + 额外等待(0.4s) = 2s
   },
 
   navigateBack() {

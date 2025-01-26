@@ -34,11 +34,11 @@
   </view>
 
   <!-- 游戏区域 -->
-  <view class="puzzle-container" style="{{containerStyle}}">
+  <view class="puzzle-container {{isCompleting ? 'completing' : ''}}" style="{{containerStyle}}">
     <block wx:for="{{blocks}}" wx:key="index">
       <view 
         id="block-{{index}}"
-        class="puzzle-block {{correctPositions.includes(index) ? 'correct' : ''}} {{dragBlock === index ? 'dragging' : ''}} {{dragPosition === index ? 'drag-target' : ''}}"
+        class="puzzle-block {{correctPositions.includes(index) ? 'correct' : ''}} {{dragBlock === index ? 'dragging' : ''}} {{dragPosition === index ? 'drag-target' : ''}} {{isCompleting ? 'completing' : ''}}"
         style="{{blockStyle}}"
         data-position="{{index}}"
         bind:touchstart="onBlockTouchStart"
@@ -86,18 +86,16 @@
     </view>
   </view>
 
-  <!-- 完成遮罩 -->
-  <view class="complete-mask" wx:if="{{isComplete}}">
-    <view class="complete-content">
-      <view class="complete-title">恭喜完成！</view>
-      <view class="complete-info">
-        <text>用时：{{time}}秒</text>
-        <text>步数：{{steps}}步</text>
-      </view>
-      <view class="complete-btns">
-        <button class="again-btn" bindtap="resetGame">再来一局</button>
-        <button class="back-btn" bindtap="navigateBack">返回</button>
-      </view>
+  <!-- 完成面板 -->
+  <view class="complete-panel {{isComplete ? 'show' : ''}}">
+    <view class="complete-title">🎉 挑战成功！</view>
+    <view class="complete-info">
+      <view class="info-item">⭐️ 用时：{{time}}秒</view>
+      <view class="info-item">👣 步数：{{steps}}步</view>
+    </view>
+    <view class="complete-btns">
+      <button class="panel-btn again-btn" bindtap="resetGame">再来一局</button>
+      <button class="panel-btn back-btn" bindtap="navigateBack">返回首页</button>
     </view>
   </view>
 
