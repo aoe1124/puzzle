@@ -1,19 +1,55 @@
 <!--pages/rank/rank.wxml-->
-<view class="container">
-  <view class="loading" wx:if="{{isLoading}}">
-    <view class="loading-spinner"></view>
+<view class="rank-container">
+  <!-- 难度切换栏 -->
+  <view class="difficulty-bar">
+    <view class="difficulty-item {{currentGrid === 3 ? 'active' : ''}}" 
+          data-grid="3" 
+          bindtap="switchDifficulty">
+      <text>休闲模式</text>
+    </view>
+    <view class="difficulty-item {{currentGrid === 4 ? 'active' : ''}}" 
+          data-grid="4" 
+          bindtap="switchDifficulty">
+      <text>进阶模式</text>
+    </view>
+    <view class="difficulty-item {{currentGrid === 5 ? 'active' : ''}}" 
+          data-grid="5" 
+          bindtap="switchDifficulty">
+      <text>挑战模式</text>
+    </view>
   </view>
-  
-  <block wx:else>
-    <view class="rank-list">
-      <view class="rank-item" wx:for="{{rankList}}" wx:key="rank">
-        <view class="rank-number {{item.rank <= 3 ? 'top-' + item.rank : ''}}">{{item.rank}}</view>
-        <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
-        <view class="player-info">
+
+  <!-- 排行榜列表 -->
+  <scroll-view class="rank-list" scroll-y enable-flex refresher-enabled 
+               bindrefresherrefresh="onRefresh" refresher-triggered="{{isRefreshing}}">
+    <block wx:if="{{hasUserInfo}}">
+      <view class="rank-item {{item.isSelf ? 'self' : ''}}" wx:for="{{rankList}}" wx:key="index">
+        <view class="rank-index">{{index + 1}}</view>
+        <view class="user-info">
+          <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
           <text class="nickname">{{item.nickname}}</text>
-          <text class="score">{{item.score}}分</text>
+        </view>
+        <view class="score-info">
+          <view class="score">{{item.score}}分</view>
+          <view class="detail">{{item.steps}}步 · {{item.time}}秒</view>
         </view>
       </view>
+      <view class="empty-tip" wx:if="{{rankList.length === 0}}">
+        暂无好友记录，快去邀请好友来挑战吧！
+      </view>
+    </block>
+    <view class="auth-tip" wx:else>
+      <text>需要获取您的头像和昵称才能参与排行</text>
+      <button class="auth-btn" bindtap="getUserProfile">点击授权</button>
     </view>
-  </block>
+  </scroll-view>
+
+  <!-- 分享按钮 -->
+  <button class="share-btn" open-type="share" wx:if="{{hasUserInfo}}">
+    <text class="iconfont icon-share"></text>
+    <text>邀请好友来挑战</text>
+  </button>
+
+  <!-- 添加隐藏的canvas用于生成分享图片 -->
+  <canvas canvas-id="shareCanvas" style="width: 300px; height: 200px; position: fixed; left: -9999px;"></canvas>
 </view> 

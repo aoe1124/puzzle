@@ -4,7 +4,6 @@ Page({
   data: {
     settings: {
       sound: true,
-      vibration: true,
       showPreview: true,
       theme: 'light'
     }

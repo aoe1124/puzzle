@@ -127,10 +127,19 @@ Page({
         title: '卡通动漫',
         category: 'cartoon'
       }
-    ]
+    ],
+    hasUserInfo: false,
+    showAuthModal: false
   },
 
   onLoad() {
+    // 检查是否已授权
+    if (app.globalData.hasUserInfo) {
+      this.setData({ hasUserInfo: true });
+    } else {
+      // 显示授权提示
+      this.setData({ showAuthModal: true });
+    }
     this.loadImages()
   },
 
@@ -294,5 +303,20 @@ Page({
   // 防止点击弹窗内容时关闭弹窗
   preventBubble() {
     return
+  },
+
+  // 处理用户授权
+  handleGetUserInfo() {
+    app.getUserProfile().then(userInfo => {
+      this.setData({
+        hasUserInfo: true,
+        showAuthModal: false
+      });
+    }).catch(() => {
+      wx.showToast({
+        title: '授权失败',
+        icon: 'none'
+      });
+    });
   }
 }) 

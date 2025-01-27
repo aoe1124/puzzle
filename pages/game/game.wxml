@@ -6,7 +6,7 @@
       <text class="iconfont icon-switch"></text>
       <text>{{grid === 3 ? '休闲模式' : (grid === 4 ? '进阶模式' : '挑战模式')}}</text>
     </view>
-    <view class="preview-btn" bindtap="togglePreview">
+    <view class="preview-btn" bindtap="togglePreview" wx:if="{{showPreviewBtn}}">
       <text class="iconfont icon-preview"></text>
       <text>原图预览</text>
     </view>
@@ -88,9 +88,10 @@
 
   <!-- 完成面板 -->
   <view class="complete-panel {{isComplete ? 'show' : ''}}">
-    <view class="complete-title">🎉 挑战成功！</view>
+    <view class="complete-title">🎉 {{isNewRecord ? '挑战成功！新纪录！' : '挑战成功！'}}</view>
     <view class="complete-info">
-      <view class="info-item">⭐️ 用时：{{time}}秒</view>
+      <view class="info-item">⭐️ 得分：{{score}}分</view>
+      <view class="info-item">⏱️ 用时：{{time}}秒</view>
       <view class="info-item">👣 步数：{{steps}}步</view>
     </view>
     <view class="complete-btns">

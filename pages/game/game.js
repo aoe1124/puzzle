@@ -1,6 +1,7 @@
 // pages/game/game.js
 const PuzzleGame = require('../../utils/puzzle');
 const ImageProcessor = require('../../utils/imageProcessor');
+const SoundManager = require('../../utils/soundManager');
 
 Page({
   data: {
@@ -13,6 +14,7 @@ Page({
     isComplete: false, // 是否完成
     isCompleting: false, // 是否正在播放完成动画
     showPreview: false, // 是否显示预览图
+    showPreviewBtn: true, // 是否显示预览按钮
     showDifficultyModal: false, // 是否显示难度选择弹窗
     containerStyle: '', // 拼图容器样式
     blockStyle: '', // 拼图块样式
@@ -24,8 +26,16 @@ Page({
 
   game: null, // 游戏实例
   timer: null, // 计时器
+  soundManager: null, // 音效管理器
 
   onLoad(options) {
+    // 初始化音效管理器
+    this.soundManager = new SoundManager();
+
+    // 获取全局设置
+    const app = getApp();
+    const showPreviewBtn = app.globalData.gameSettings.showPreview;
+
     if (!options.imageUrl) {
       wx.showToast({
         title: '图片加载失败',
@@ -47,7 +57,8 @@ Page({
     
     this.setData({
       grid: parseInt(grid) || 3,
-      imageUrl
+      imageUrl,
+      showPreviewBtn
     });
     this.initGame();
   },
@@ -143,10 +154,12 @@ Page({
   },
 
   onBlockTap(e) {
-    if (this.data.isComplete) return;
+    if (this.data.isComplete || this.data.isCompleting) return;
 
     const { position } = e.currentTarget.dataset;
     if (!this.game?.canMove(position)) return;
+
+    const previousCorrectCount = this.data.correctPositions.length;
 
     if (this.game.move(position)) {
       const gameState = this.game.getGameState();
@@ -157,13 +170,22 @@ Page({
         isComplete: gameState.isComplete
       });
 
+      // 根据情况播放不同音效
       if (gameState.isComplete) {
+        // 完成时只播放完成音效
         this.onGameComplete();
+      } else if (gameState.correctPositions.length > previousCorrectCount) {
+        // 正确放置时只播放正确音效
+        this.soundManager.playCorrect();
+      } else {
+        // 普通移动只播放移动音效
+        this.soundManager.playMove();
       }
     }
   },
 
   togglePreview() {
+    if (!this.data.showPreviewBtn) return;
     this.setData({
       showPreview: !this.data.showPreview
     });
@@ -188,29 +210,136 @@ Page({
   onGameComplete() {
     this.stopTimer();
     
+    // 播放完成音效
+    this.soundManager.playComplete();
+    
+    // 计算得分
+    let baseScore;
+    let timeDeduction = 0;
+    const time = this.data.time;
+
+    // 根据难度设置基础分
+    switch(this.data.grid) {
+      case 3:
+        baseScore = 1000;
+        // 3x3模式时间扣分
+        if (time > 15) {
+          if (time <= 30) {
+            timeDeduction = Math.floor((time - 15) / 5) * 10;
+          } else {
+            timeDeduction = Math.floor(15 / 5) * 10; // 15-30秒的扣分
+            timeDeduction += Math.floor((time - 30) / 10) * 10; // 30秒以上的扣分
+          }
+        }
+        break;
+      case 4:
+        baseScore = 1500;
+        // 4x4模式时间扣分
+        if (time > 30) {
+          if (time <= 60) {
+            timeDeduction = Math.floor((time - 30) / 10) * 10;
+          } else {
+            timeDeduction = Math.floor(30 / 10) * 10; // 30-60秒的扣分
+            timeDeduction += Math.floor((time - 60) / 15) * 10; // 60秒以上的扣分
+          }
+        }
+        break;
+      case 5:
+        baseScore = 2000;
+        // 5x5模式时间扣分
+        if (time > 45) {
+          if (time <= 90) {
+            timeDeduction = Math.floor((time - 45) / 15) * 10;
+          } else {
+            timeDeduction = Math.floor(45 / 15) * 10; // 45-90秒的扣分
+            timeDeduction += Math.floor((time - 90) / 20) * 10; // 90秒以上的扣分
+          }
+        }
+        break;
+    }
+
+    // 计算步数扣分
+    const optimalSteps = this.data.grid * this.data.grid;
+    const stepsDeduction = Math.max(0, this.data.steps - optimalSteps) * 2;
+    
+    // 计算最终得分（不低于0分）
+    let finalScore = Math.max(0, baseScore - timeDeduction - stepsDeduction);
+
+    // 隐藏加分：如果没有使用原图参考，额外加99分
+    if (!this.data.showPreviewBtn) {
+      finalScore += 99;
+    }
+    
     // 开始完成动画
     this.setData({
-      isCompleting: true
+      isCompleting: true,
+      score: finalScore
     });
 
     // 等待动画完成后显示面板
     setTimeout(() => {
-      // 保存游戏记录
-      const record = {
+      // 获取现有记录
+      let gameData = wx.getStorageSync('gameData') || {
+        statistics: {
+          totalGames: 0,
+          totalTime: 0
+        },
+        bestRecords: {
+          3: { score: 0, time: Infinity, steps: Infinity, date: '' },
+          4: { score: 0, time: Infinity, steps: Infinity, date: '' },
+          5: { score: 0, time: Infinity, steps: Infinity, date: '' }
+        },
+        recentRecords: []
+      };
+
+      // 创建当前记录
+      const currentRecord = {
         grid: this.data.grid,
         steps: this.data.steps,
         time: this.data.time,
+        score: finalScore,
         date: new Date().toISOString()
       };
-      const records = wx.getStorageSync('gameRecords') || [];
-      records.push(record);
-      wx.setStorageSync('gameRecords', records);
+
+      // 更新统计数据
+      gameData.statistics.totalGames++;
+      gameData.statistics.totalTime += this.data.time;
+
+      // 更新最佳记录
+      const grid = this.data.grid;
+      const bestRecord = gameData.bestRecords[grid];
+      let isNewRecord = false;
+
+      if (finalScore > bestRecord.score) {
+        isNewRecord = true;
+        bestRecord.score = finalScore;
+        bestRecord.time = this.data.time;
+        bestRecord.steps = this.data.steps;
+        bestRecord.date = currentRecord.date;
+      } else if (finalScore === bestRecord.score) {
+        if (this.data.time < bestRecord.time) {
+          isNewRecord = true;
+          bestRecord.time = this.data.time;
+          bestRecord.steps = this.data.steps;
+          bestRecord.date = currentRecord.date;
+        }
+      }
+
+      // 更新最近记录（保留最近20条）
+      gameData.recentRecords.unshift(currentRecord);
+      if (gameData.recentRecords.length > 20) {
+        gameData.recentRecords.pop();
+      }
+
+      // 保存更新后的数据
+      wx.setStorageSync('gameData', gameData);
 
       // 显示完成面板
       this.setData({
-        isComplete: true
+        isComplete: true,
+        isNewRecord: isNewRecord
       });
-    }, 2000); // 动画总时长：发光(0.8s) + 合并(0.8s) + 额外等待(0.4s) = 2s
+    }, 2000);
   },
 
   navigateBack() {
@@ -219,6 +348,8 @@ Page({
 
   onUnload() {
     this.stopTimer();
+    // 销毁音效管理器
+    this.soundManager?.destroy();
   },
 
   // 开始拖动
@@ -291,6 +422,10 @@ Page({
     if (toPos !== null && fromPos !== toPos) {
       if (this.game.swap(fromPos, toPos)) {
         const gameState = this.game.getGameState();
+        
+        // 获取之前的正确数量
+        const previousCorrectCount = this.data.correctPositions.length;
+        
         this.setData({
           blocks: gameState.blocks,
           correctPositions: gameState.correctPositions,
@@ -298,8 +433,16 @@ Page({
           isComplete: gameState.isComplete
         });
 
+        // 根据情况播放不同音效
         if (gameState.isComplete) {
+          // 完成时只播放完成音效
           this.onGameComplete();
+        } else if (gameState.correctPositions.length > previousCorrectCount) {
+          // 正确放置时只播放正确音效
+          this.soundManager.playCorrect();
+        } else {
+          // 普通移动只播放移动音效
+          this.soundManager.playMove();
         }
       }
     }

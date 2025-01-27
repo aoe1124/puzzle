@@ -291,3 +291,52 @@
     transform: translateY(0);
   }
 }
+/* 授权弹窗 */
+.auth-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.auth-content {
+  width: 560rpx;
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 48rpx 32rpx;
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 24rpx;
+}
+
+.auth-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 48rpx;
+}
+
+.auth-btn {
+  width: 240rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  background: #2C3E50;
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.auth-btn:active {
+  opacity: 0.9;
+}
